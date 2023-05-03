@@ -1,0 +1,32 @@
+version: '3'
+services: 
+  db:
+    image: mst_db
+    container_name: cont-db
+    environment:      
+      - "ALLOW_EMPTY_PASSWORD=yes"
+      - "PGPASSPOSTGRESQL_PASSWORD=s3cr3t"
+    ports: 
+      - 5432:5432
+    networks:
+      - base_net
+  words:
+    image: mst_words
+    container_name: cont-words
+    command: java -Xmx8m -Xms8m -jar target/words.jar
+    ports:
+      - 8080:8080
+    networks:
+      - base_net
+  web:
+    image: mst_web
+    container_name: cont-web
+    command: ./dispatcher
+    ports:
+      - 80:80
+    networks:
+      - base_net
+  
+networks:
+  base_net:
+    driver: bridge
